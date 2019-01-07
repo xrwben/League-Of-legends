@@ -1,0 +1,15 @@
+{
+  "name": "league_of_legends_server",
+  "version": "1.0.0",
+  "description": "召唤师英雄后台服�接口",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "黎奔",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4",
+    "mongoose": "^5.4.2"
+  }
+}
