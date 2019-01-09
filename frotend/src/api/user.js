@@ -3,7 +3,7 @@ import axios from "./http.js";
 export default {
   // 登录
   login (username, password) {
-    return Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       axios.post("/leagueOfLegends/login", {
         username,
         password
@@ -16,7 +16,7 @@ export default {
   },
   // 注册
   register (username, password) {
-    return Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       axios.post("/leagueOfLegends/register", {
         username,
         password

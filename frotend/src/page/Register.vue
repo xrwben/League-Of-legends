@@ -14,8 +14,8 @@
 				<el-input type="password" v-model.trim="login.conformpassword" @keydown.enter="registerAccount" placeholder="请确认密码">
 					<i slot="prefix" class="el-input__icon iconfont icon-dengluyemianmima"></i>
 				</el-input>
-				<el-button type="primary" size="medium">注册</el-button>
-        <p><a href="javascript:void(0)" @click="$router.push('/login')">登录&gt;&gt;</a></p>
+				<el-button type="primary" size="medium" @click="registerAccount">注册</el-button>
+        <p><a href="javascript:void(0)" @click="$router.push('/login')">登录 &gt;&gt;</a></p>
       </div>
     </div>
   </div>
@@ -23,6 +23,7 @@
 
 <script>
 	export default {
+		name: "Register",
     data () {
       return {
         login: {
@@ -31,7 +32,10 @@
           conformpassword: ''
         }
       }
-    },
+		},
+		created () {
+			console.log(this.api);
+		},
     methods: {
       registerAccount () {
         if (!this.login.account) {
@@ -41,18 +45,14 @@
         } else if (this.login.password !== this.login.conformpassword) {
           this.$message.warning('两次输入密码不一致！');
         } else {
-          this.axios({
-            method: 'POST',
-            url: '/leagueOfLegends/register',
-            data: this.toFormData({
-              account: this.login.account.trim(),
-              password: this.login.password.trim()
-            })
-          }).then((result) => {
-            if (result.data.code === 0) {
-              
-            }
-          })
+					this.api.user.register(
+						this.login.account,
+						this.login.password
+					).then(res => {
+						console.log(res);
+					}).catch(err => {
+						console.log(err);
+					});
         }
       }
     }

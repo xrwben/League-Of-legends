@@ -16,7 +16,7 @@ module.exports = webpackMerge(webpackBaseConfig, {
     new webpack.HotModuleReplacementPlugin()
   ],
   devServer: {
-    host: "0.0.0.0",
+    host: "localhost",
 		port: "8888",
 		contentBase: path.resolve(__dirname, "../dist"),
 		compress: true,
@@ -30,8 +30,8 @@ module.exports = webpackMerge(webpackBaseConfig, {
 		},
 		proxy: {
 			"/leagueOfLegends": {
-				target: "http://192.168.0.103:9999",
-				secure: false,
+				target: "http://localhost:9999",
+				secure: false
 			}
 			// 代理多个
 			// context: ["/api"],
