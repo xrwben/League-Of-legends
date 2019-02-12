@@ -27,9 +27,9 @@
     data () {
       return {
         login: {
-          account: '',
-          password: '',
-          conformpassword: ''
+          account: "",
+          password: "",
+          conformpassword: ""
         }
       }
 		},
