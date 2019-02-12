@@ -83,8 +83,8 @@
 	#Login {
 		width: 100%;
 		height: 100%;
-		background: url('../asserts/login-bg.jpg') no-repeat center;
-		background-size: 100% 100%;
+		// background: url('../asserts/login-bg.jpg') no-repeat center;
+		// background-size: 100% 100%;
 		display: flex;
 		align-items: center;
   	justify-content: center;

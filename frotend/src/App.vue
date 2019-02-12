@@ -34,12 +34,14 @@
 		width: 100vw;
 		height: 100vh;
 		.vue-particles {
+			background: url('./asserts/login-bg.jpg') no-repeat center;
+			background-size: 100% 100%;
 			position: fixed;
 			left: 0;
 			top: 0;
 			right: 0;
 			bottom: 0;
-			z-index: 0;
+			z-index: -1;
 		}
 	}
 </style>
