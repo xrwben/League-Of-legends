@@ -63,8 +63,6 @@
 	#Register {
 		width: 100%;
 		height: 100%;
-		// background: url('../asserts/login-bg.jpg') no-repeat center;
-		// background-size: 100% 100%;
 		display: flex;
 		align-items: center;
   	justify-content: center;
@@ -89,7 +87,6 @@
 			}
 			.register_input {
 				margin-top: 20px;
-				// border: 1px solid red;
 				padding: 10px 35px;
 				text-align: center;
 				.el-input {
