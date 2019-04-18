@@ -11,7 +11,7 @@
 				<el-input type="password" v-model.trim="login.password" @keydown.enter="submitForm" placeholder="请输入密码">
 					<i slot="prefix" class="el-input__icon iconfont icon-dengluyemianmima"></i>
 				</el-input>
-				<el-button type="primary" size="medium" :loading="true">登录</el-button>
+				<el-button type="primary" size="medium" :loading="showLoading" @click="submitForm">{{ loginTxt }}</el-button>
         <p><a href="javascript:void(0)" @click="$router.push('/register')">注册&gt;&gt;</a></p>
       </div>
     </div>
@@ -32,47 +32,19 @@
     },
     methods: {
       submitForm () {
+        console.log(12);
         if (!this.login.account) {
           this.$message.warning('账号不能为空！')
         } else if (!this.login.password) {
           this.$message.warning('密码不能为空！')
         } else {
           this.loginTxt = '登录中'
-          this.axios({
-            method: 'POST',
-            url: '/keygood/web/companyuser/login',
-            data: this.toFormData({
-              account: this.login.account.trim(),
-              password: this.login.password.trim()
-            })
-          }).then((result) => {
-            if (result.data.code === 0) {
-              // 把数据保存在本地
-              sessionStorage.setItem('token', result.data.token)
-              sessionStorage.setItem('company', JSON.stringify(result.data.company))
-              sessionStorage.setItem('companyUser', JSON.stringify(result.data.companyUser))
-              sessionStorage.setItem('historyOrder', JSON.stringify(result.data.historyOrder))
-              sessionStorage.setItem('thisOrder', JSON.stringify(result.data.thisOrder))
-              // 登录跳转
-              if (result.data.companyUser.logonMode === 1) {
-                this.$router.push('/stock')
-              } else {
-                if (result.data.companyUser.role) {
-                  if (result.data.companyUser.role.charAt(0) === '1') {
-                    this.$router.push('/stock')
-                  } else if (result.data.companyUser.role.charAt(0) === '2') {
-                    this.$router.push('/companymanagement')
-                  } else {
-                    this.$router.push('/my')
-                  }
-                } else {
-                  this.$router.push('/my')
-                }
-              }
-            }
-          }).catch(() => {
-            this.loginTxt = '登录'
-          })
+          this.api.user.login(
+            this.login.account,
+            this.login.password,
+          ).then(res => {
+            console.log(res);
+          });
         }
       }
     }

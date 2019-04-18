@@ -31,8 +31,8 @@
 	@import "./style/reset.css";
 	@import "./asserts/iconfont/iconfont.css";
 	#app {
-		width: 100vw;
-		height: 100vh;
+		width: 100%;
+		height: 100%;
 		.vue-particles {
 			background: url('./asserts/login-bg.jpg') no-repeat center;
 			background-size: 100% 100%;
