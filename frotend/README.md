@@ -1,5 +1,3 @@
-**使用方式：**
-
    + git clone https://github.com/xrwben/webpack4-vue.git
    
    + npm install 
