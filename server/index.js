@@ -16,16 +16,16 @@ app.use(session({
   },
 }))
 
-app.use((req, res, next) => {
-  console.log(req.url);
-  if (["/leagueOfLegends/login", "/leagueOfLegends/register"].includes(req.url)) {
-    next();
-  } else if (req.session.userInfo) {
-    next();
-  } else {
-    res.send("未登录");
-  }
-})
+// app.use((req, res, next) => {
+//   console.log(req.url);
+//   if (["/leagueOfLegends/login", "/leagueOfLegends/register"].includes(req.url)) {
+//     next();
+//   } else if (req.session.userInfo) {
+//     next();
+//   } else {
+//     res.send("未登录");
+//   }
+// })
 
 const router = require("./router/index.js");
 router(app);

@@ -79,8 +79,8 @@
           <el-col :span="12">
             <el-form-item label="英雄性别">
               <el-select v-model="addForm.sex" placeholder="请选择">
-                <el-option label="男" value="男"></el-option>
-                <el-option label="女" value="女"></el-option>
+                <el-option label="男" :value="1"></el-option>
+                <el-option label="女" :value="0"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -133,7 +133,7 @@
       </el-row>
       <span slot="footer" class="dialog-footer">
         <el-button size="small" @click="showDialog = false">取 消</el-button>
-        <el-button size="small" type="primary" @click="showDialog = false">确 定</el-button>
+        <el-button size="small" type="primary" @click="addConfirm">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -195,7 +195,7 @@
         addForm: {
           name: '',
           subname: '',
-          properties: '',
+          properties: [],
           sex: '',
           skill: {
             a: '',
@@ -209,13 +209,35 @@
             other: ''
           },
           introduce: '',
-          images: ''
+          images: []
         }
       }
     },
     methods: {
       changeNum (val) {
         console.log(val);
+      },
+      // 确认添加英雄
+      addConfirm () {
+        const postData = {
+          name: this.addForm.name,
+          subname: this.addForm.subname,
+          properties: this.addForm.properties,
+          sex: this.addForm.sex,
+          a: this.addForm.skill.a,
+          q: this.addForm.skill.q,
+          w: this.addForm.skill.w,
+          e: this.addForm.skill.e,
+          r: this.addForm.skill.r,
+          self: this.addForm.usage.self,
+          other: this.addForm.usage.other,
+          introduce: this.addForm.introduce,
+          images: this.addForm.images
+        };
+        console.log(postData);
+        this.api.hero.addHero(postData).then(res => {
+          console.log(res);
+        });
       }
     }
   }
