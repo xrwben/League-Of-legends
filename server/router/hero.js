@@ -15,29 +15,37 @@ exports.addHero = (req, res) => {
 
 exports.getHeroList = (req, res) => {
   console.log(req.body);
-  const { heroName, pageNum, pageSize } = req.body;
-  Hero.find({}).skip((pageNum - 1) * pageSize).limit(pageSize).sort({"updateTime": '-1'}).exec((err, doc) => {
-    res.json({data: doc});
+  const { searchKey, pageNum, pageSize } = req.body;
+  const iNum = (Number(pageNum) - 1) * Number(pageSize);
+  const iSize = Number(pageSize);
+  let queryParams = {};
+  if (searchKey) {
+    const reg = new RegExp(searchKey, 'i')
+    queryParams = {
+      name: {$regex: reg}
+    }
+  }
+  Hero.find(queryParams).skip(iNum).limit(iSize).sort({updateTime: '-1'}).exec((err, doc) => {
+    if (err) {
+      return console.error(err);
+    } else {
+      Hero.count(queryParams, (err, count) => {
+        if (err) {
+          return console.error(err);
+        } else {
+          const resData = {
+            pagination: {
+              pageNum: pageNum,
+              pageSize: pageSize,
+              totalSize: count
+            },
+            heroList: doc
+          }
+          utils.responseClient(res, 200, 0, "查询成功", resData);
+        }
+      })
+    }
   })
-  // if (!pageNum || !pageSize) {
-  //   pageNum = 1;
-  //   pageSize = 10;
-  // }
-  // Hero.find({heroName: heroName}).skip((pageNum - 1) * pageSize).limit(pageSize).exec((err, doc) => {
-  //   if (err) {
-  //     return console.error(err);
-  //   } else {
-  //     const resData = {
-  //       pagination: {
-  //         pageNum: pageNum,
-  //         pageSize: pageSize,
-  //         totalSize: Hero.count()
-  //       },
-  //       heroList: doc
-  //     }
-  //     utils.responseClient(res, 200, 0, "查询成功", resData);
-  //   }
-  // })
 }
 
 exports.updateHero = (req, res) => {
