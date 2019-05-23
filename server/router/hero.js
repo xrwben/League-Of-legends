@@ -48,10 +48,37 @@ exports.getHeroList = (req, res) => {
   })
 }
 
+exports.getHeroDetails = (req, res) => {
+  console.log(req.body);
+  Hero.findById(req.body.heroId, (err, doc) => {
+    if (err) {
+      return console.error(err);
+    } else {
+      utils.responseClient(res, 200, 0, "查询成功", doc);
+    }
+  })
+}
+
 exports.updateHero = (req, res) => {
   console.log(req.body);
+  const { heroId, heroData } = req.body;
+  // const reqData = new Hero(req.body);
+  Hero.findByIdAndUpdate(heroId, heroData, (err, doc) => {
+    if (err) {
+      return console.error(err);
+    } else {
+      utils.responseClient(res, 200, 0, "更新成功", doc);
+    }
+  })
 }
 
 exports.deleteHero = (req, res) => {
   console.log(req.body);
+  Hero.findByIdAndRemove(req.body.heroId, (err, doc) => {
+    if (err) {
+      return console.error(err);
+    } else {
+      utils.responseClient(res, 200, 0, "刪除成功", doc);
+    }
+  })
 }
