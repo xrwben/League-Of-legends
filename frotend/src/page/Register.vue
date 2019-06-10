@@ -50,6 +50,12 @@
 						this.login.password
 					).then(res => {
 						console.log(res);
+						if (res.data.error.level === 0) {
+							this.$message.success('注册成功！');
+							this.$router.go(-1);
+						} else {
+							this.$message.error(res.data.error.msg);
+						}
 					}).catch(err => {
 						console.log(err);
 					});

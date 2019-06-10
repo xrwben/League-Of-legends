@@ -43,7 +43,12 @@
             this.login.account,
             this.login.password,
           ).then(res => {
-            console.log(res);
+						console.log(res);
+						if (res.data.error.level === 0) {
+							this.$router.push('/hero-list');
+						} else {
+							this.$message.error('账号或密码错误！');
+						}
           });
         }
       }
