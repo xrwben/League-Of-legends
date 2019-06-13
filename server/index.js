@@ -1,7 +1,10 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const session = require("express-session");
+const path = require("path");
 const app = express();
+
+app.use("/uploads", express.static(path.join(__dirname, "./uploads")));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -32,6 +35,8 @@ router(app);
 
 // app.use("/leagueOfLegends", router);
 
-app.listen("9999", () => {
-  console.log("英雄联盟后台服务正在9999端口运行！！！");
+const server = app.listen("9999", () => {
+  // const host = server.address().address;
+  const port = server.address().port;
+  console.log(`英雄联盟后台服务正在${port}端口运行！！！`);
 });

@@ -28,9 +28,16 @@ export default {
       })
     })
   },
-  async getHeroList () {
-    return await axios.post("/leagueOfLegends/addHero", {
-      searchKey: ''
+  async getHeroList (params) {
+    return await axios.post("/leagueOfLegends/getHeroList", {
+      searchKey: params.searchKey,
+      pageNum: params.pageNum,
+      pageSize: params.pageSize
+    })
+  },
+  async deleteHero (heroId) {
+    return await axios.post("/leagueOfLegends/deleteHero", {
+      heroId
     })
   }
 }

@@ -4,11 +4,13 @@
       <h2>召唤师峡谷</h2>
       <div class="search">
         <el-input placeholder="英雄名称" clearable size="small" debounce="500" suffix-icon="el-icon-search" v-model.trim="filter.searchKey"></el-input>
-        <el-button type="primary" size="small" @click="showDialog = true">添加</el-button>
+        <el-button type="primary" size="small" @click="addOrEditHero('add')">添加</el-button>
       </div>
       <div class="hero-list">
         <el-table :data="tableData" border max-height="500" size="small">
-          <el-table-column prop="date" label="日期" width="180"></el-table-column>
+          <el-table-column label="姓名" width="180">
+            <template slot-scope="scope">{{ scope.row.name }}</template>
+          </el-table-column>
           <el-table-column prop="name" label="姓名" width="180"></el-table-column>
           <el-table-column prop="address" label="地址"></el-table-column>
           <el-table-column label="操作" width="200">
@@ -17,18 +19,12 @@
                 path: '/hero-detail',
                 query: {id: scope.row.name}
               })">查看</el-button>
-              <el-button class="look" type="text" size="mini" @click="$router.push({
+              <el-button class="look" type="text" size="mini" @click="addOrEditHero('edit')">编辑</el-button>
+              <el-button class="look" type="text" size="mini" @click="deleteHero(scope.row._id)">删除</el-button>
+              <!-- <el-button class="look" type="text" size="mini" @click="$router.push({
                 path: '/hero-detail',
                 query: {id: scope.row.name}
-              })">编辑</el-button>
-              <el-button class="look" type="text" size="mini" @click="$router.push({
-                path: '/hero-detail',
-                query: {id: scope.row.name}
-              })">删除</el-button>
-              <el-button class="look" type="text" size="mini" @click="$router.push({
-                path: '/hero-detail',
-                query: {id: scope.row.name}
-              })">添加</el-button>
+              })">添加</el-button> -->
             </template>
           </el-table-column>
         </el-table>
@@ -126,7 +122,17 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="上传皮肤">
-              <el-input type="textarea" v-model="addForm.introduce"></el-input>
+              <el-upload class="avatar-uploader"
+                action="/leagueOfLegends/upload"
+                list-type="picture-card"
+                :file-list="this.addForm.images"
+                :on-success="handleAvatarSuccess"
+                :on-remove="handleRemove">
+                <i class="el-icon-plus"></i>
+              </el-upload>
+              <!-- <el-dialog :visible.sync="dialogVisible">
+                <img width="100%" :src="dialogImageUrl" alt="">
+              </el-dialog> -->
             </el-form-item>
           </el-col>
         </el-form>
@@ -143,53 +149,15 @@
   export default {
     data () {
       return {
+        // dialogImageUrl: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
+				// dialogVisible: false,
         filter: {
           searchKey: '',
           totalSize: 0,
           pageNum: 1,
           pageSize: 10
         },
-        tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }],
+        tableData: [],
         // 弹窗
         showDialog: false,
         addForm: {
@@ -209,13 +177,40 @@
             other: ''
           },
           introduce: '',
-          images: []
+          // images: [],
+          images: [/* {
+            name: 'food.jpeg',
+            url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
+          }, {
+            name: 'food2.jpeg',
+            url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
+          } */],
         }
       }
     },
+    created () {
+      this.getDatas();
+    },
     methods: {
+      getDatas () {
+        const reqData = {
+          searchKey: this.filter.searchKey,
+          pageNum: this.filter.pageNum,
+          pageSize: this.filter.pageSize
+        }
+        this.api.hero.getHeroList(reqData).then(res => {
+          console.log(res);
+          this.tableData = res.data.resData.heroList;
+          this.filter.totalSize = res.data.resData.pagination.totalSize;
+        })
+      },
+      // 改变分页
       changeNum (val) {
-        console.log(val);
+        this.filter.pageNum = val;
+        this.getDatas();
+      },
+      addOrEditHero (type) {
+        if (type === "add") {}
       },
       // 确认添加英雄
       addConfirm () {
@@ -238,7 +233,26 @@
         this.api.hero.addHero(postData).then(res => {
           console.log(res);
         });
-      }
+      },
+      // 删除
+      deleteHero (heroId) {
+        console.log(heroId);
+        this.api.hero.deleteHero(heroId).then(res => {
+          console.log(res);
+        })
+      },
+      handleRemove(file, fileList) {
+				console.log(file, fileList);
+				this.addForm.images = fileList;
+      },
+			// 上传成功的回显方法
+      handleAvatarSuccess (res, file, fileList) {
+				// console.log(res, file, fileList);
+        // this.imageUrl = URL.createObjectURL(file.raw);
+				// this.imageUrl = res.filePath;
+				this.addForm.images = fileList;
+				console.log("this.fileList>>>>>>", this.addForm.images);
+      },
     }
   }
 </script>
@@ -297,7 +311,19 @@
         .el-dialog__body {
           padding: 10px 20px;
           .dialog-container {
-            // border: 1px solid #dcdfe6;
+            border: 1px solid red;
+            .el-upload-list__item {
+              width: 80px;
+              height: 80px;
+            }
+            .el-upload--picture-card {
+              width: 80px;
+              height: 80px;
+              line-height: 80px;
+              & > i {
+                font-size: 20px;
+              }
+            }
           }
         }
         .el-dialog__footer {

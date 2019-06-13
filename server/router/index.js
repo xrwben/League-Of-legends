@@ -1,5 +1,6 @@
 const user = require("./user.js");
 const hero = require("./hero.js");
+const upload = require("./upload.js");
 
 module.exports = (app) => {
   app.post("/leagueOfLegends/register", user.resgister);
@@ -9,4 +10,5 @@ module.exports = (app) => {
   app.post("/leagueOfLegends/getHeroDetails", hero.getHeroDetails);
   app.post("/leagueOfLegends/updateHero", hero.updateHero);
   app.post("/leagueOfLegends/deleteHero", hero.deleteHero);
+  app.post("/leagueOfLegends/upload", upload.uploadAny, upload.uploadRes);
 }
